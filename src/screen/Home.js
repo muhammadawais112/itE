@@ -1,21 +1,46 @@
-import { View, Text, ScrollView, Image, Button } from 'react-native'
+import { View, Text, ScrollView, Image, Button, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import Seearch from '../components/Seearch';
 import { Data } from '../data';
 
 
+const list = [
+    {
+        status: "A"
+    },
+    {
+        status: "B"
+    },
+    {
+        status: "C"
+    },
+
+
+]
+
+
+
+
+
 
 
 export default function Home({ navigation }) {
 
-    const [list, setList] = useState([])
 
+    const [status, setStatus] = useState("A")
+    const [demoList, setDemoList] = useState(Data)
 
-    const handleClick = (item, index) => {
-        setList([...list, item])
+    const setFlter = status => {
+        if (status !== "A") {
+            setDemoList([...Data.filter(e => e.status === status)])
+        } else {
+            setDemoList(Data)
+        }
+        setStatus(status)
     }
-    console.log(list);
+
+
 
 
     return (
@@ -29,41 +54,22 @@ export default function Home({ navigation }) {
             </View>
 
 
-            <View style={{ flex: 1, marginTop: 10 }}>
-                <ScrollView horizontal={true}>
-                    <View style={{ height: 25, width: 60, backgroundColor: "#007fff", borderRadius: 30, marginHorizontal: 5, alignItems: "center" }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "white", marginTop: 4 }}>All</Text>
-                    </View>
-
-                    <View style={{ height: 25, width: 60, backgroundColor: "#C5C5C5", borderRadius: 30, marginHorizontal: 5 }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "black", marginTop: 4 }}>Fashion</Text>
-                    </View>
-                    <View style={{ height: 25, width: 100, backgroundColor: "#C5C5C5", borderRadius: 30, marginHorizontal: 5 }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "black", marginTop: 4 }}>Delivery Apps</Text>
-                    </View>
-                    <View style={{ height: 25, width: 60, backgroundColor: "#C5C5C5", borderRadius: 30, marginHorizontal: 5 }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "black", marginTop: 4 }}>Shoes</Text>
-                    </View>
-                    <View style={{ height: 25, width: 60, backgroundColor: "#C5C5C5", borderRadius: 30, marginHorizontal: 5 }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "black", marginTop: 4 }}>Fashion</Text>
-                    </View>
-                    <View style={{ height: 25, width: 60, backgroundColor: "#C5C5C5", borderRadius: 30, marginHorizontal: 5 }}>
-                        <Text style={{ textAlign: "center", fontWeight: "900", paddingHorizontal: 5, fontSize: 12, color: "black", marginTop: 4 }}>Fashion</Text>
-                    </View>
-                </ScrollView>
-
-
-
-
-
-
-
+            <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                {
+                    list.map((e, index) => <View key={index} style={{ width: 100, marginBottom: 20, borderWidth: 0.5, borderColor: "red", padding: 10, justifyContent: "center", marginLeft: 15 }}>
+                        <Text
+                            style={[styles.btnText, status === e.status && styles.btnActive]}
+                            onPress={() => setFlter(e.status)} >{e.status}</Text>
+                    </View>)
+                }
             </View>
+
+
 
 
             <View style={{ flex: 8 }}>
                 {
-                    Data.map((item, index) => <View key={index} style={{ height: 80, width: 340, backgroundColor: "white", marginLeft: 10, borderRadius: 10, marginBottom: 10, }}>
+                    demoList.map((item, index) => <View key={index} style={{ height: 80, width: 340, backgroundColor: "white", marginLeft: 10, borderRadius: 10, marginBottom: 10, }}>
                         <View style={{ display: "flex", flexDirection: 'row', marginTop: 10, }}>
                             <Image
                                 style={{ height: 60, width: 60, marginLeft: 15, borderRadius: 50 }}
@@ -74,32 +80,31 @@ export default function Home({ navigation }) {
                             <View>
                                 <Text style={{ marginHorizontal: 5, fontWeight: "bold", color: "black", marginTop: 5 }}>{item.title}</Text>
                                 <Text style={{ marginHorizontal: 5, marginTop: 3, }}>Offer:{item.offer}</Text>
-                                <Button
-                                    title="Go to Details... again"
-                                    onPress={() => handleClick(item, index)}
-                                />
                             </View>
                         </View>
 
 
                     </View>)
                 }
-
-                <Button
-                    title="Go to Details"
-                    onPress={() => {
-                        /* 1. Navigate to the Details route with params */
-                        navigation.navigate('Profile', {
-                            itemId: list
-
-                        });
-                    }}
-                />
-
-
-
-
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea"
+    },
+    btnText: {
+        backgroundColor: "black",
+        color: "blue"
+    },
+    btnActive: {
+        backgroundColor: "red"
+
+    }
+
+
+});
